@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# Define the weights for each criterion
+# Define the weights for each criterion nhahahaha
 WEIGHTS = {
     "total_jobs_ended": 0.2,
     "user_rating": 0.4,
