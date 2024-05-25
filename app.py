@@ -10,15 +10,38 @@ WEIGHTS = {
     "distance": 0.1
 }
 
+def safe_divide(numerator, denominator):
+    """
+    Safely divide two numbers, returning 0 if the denominator is zero.
+    """
+    return numerator / denominator if denominator != 0 else 0
+
 def calculate_similarity(profile, target_profile):
     """
     Calculate similarity score between two profiles.
     """
     score = 0.0
-    score += WEIGHTS["total_jobs_ended"] * (1 - abs(profile["total_jobs_ended"] - target_profile["total_jobs_ended"]) / max(profile["total_jobs_ended"], target_profile["total_jobs_ended"]))
-    score += WEIGHTS["user_rating"] * (1 - abs(profile["user_rating"] - target_profile["user_rating"]) / max(profile["user_rating"], target_profile["user_rating"]))
-    score += WEIGHTS["total_money_earned"] * (1 - abs(profile["total_money_earned"] - target_profile["total_money_earned"]) / max(profile["total_money_earned"], target_profile["total_money_earned"]))
-    score += WEIGHTS["distance"] * (1 - abs(profile["distance"] - target_profile["distance"]) / max(profile["distance"], target_profile["distance"]))
+    
+    # Handle total_jobs_ended
+    profile_jobs_ended = profile.get("total_jobs_ended", 0)
+    target_jobs_ended = target_profile.get("total_jobs_ended", 0)
+    score += WEIGHTS["total_jobs_ended"] * (1 - safe_divide(abs(profile_jobs_ended - target_jobs_ended), max(profile_jobs_ended, target_jobs_ended)))
+    
+    # Handle user_rating
+    profile_rating = profile.get("user_rating", 0)
+    target_rating = target_profile.get("user_rating", 0)
+    score += WEIGHTS["user_rating"] * (1 - safe_divide(abs(profile_rating - target_rating), max(profile_rating, target_rating)))
+    
+    # Handle total_money_earned
+    profile_money_earned = profile.get("total_money_earned", 0)
+    target_money_earned = target_profile.get("total_money_earned", 0)
+    score += WEIGHTS["total_money_earned"] * (1 - safe_divide(abs(profile_money_earned - target_money_earned), max(profile_money_earned, target_money_earned)))
+    
+    # Handle distance
+    profile_distance = profile.get("distance", 0)
+    target_distance = target_profile.get("distance", 0)
+    score += WEIGHTS["distance"] * (1 - safe_divide(abs(profile_distance - target_distance), max(profile_distance, target_distance)))
+    
     return score
 
 @app.route('/rank_profiles', methods=['POST'])
@@ -41,4 +64,4 @@ def rank_profiles():
     return jsonify(ranked_profiles)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000,debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
