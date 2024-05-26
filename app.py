@@ -23,23 +23,23 @@ def calculate_similarity(profile, target_profile):
     score = 0.0
     
     # Handle total_jobs_ended
-    profile_jobs_ended = profile.get("total_jobs_ended", 0)
-    target_jobs_ended = target_profile.get("total_jobs_ended", 0)
+    profile_jobs_ended = profile.get("total_jobs_ended", 0) or 0
+    target_jobs_ended = target_profile.get("total_jobs_ended", 0) or 0
     score += WEIGHTS["total_jobs_ended"] * (1 - safe_divide(abs(profile_jobs_ended - target_jobs_ended), max(profile_jobs_ended, target_jobs_ended)))
     
     # Handle user_rating
-    profile_rating = profile.get("user_rating", 0)
-    target_rating = target_profile.get("user_rating", 0)
+    profile_rating = profile.get("user_rating", 0) or 0
+    target_rating = target_profile.get("user_rating", 0) or 0
     score += WEIGHTS["user_rating"] * (1 - safe_divide(abs(profile_rating - target_rating), max(profile_rating, target_rating)))
     
     # Handle total_money_earned
-    profile_money_earned = profile.get("total_money_earned", 0)
-    target_money_earned = target_profile.get("total_money_earned", 0)
+    profile_money_earned = profile.get("total_money_earned", 0) or 0
+    target_money_earned = target_profile.get("total_money_earned", 0) or 0
     score += WEIGHTS["total_money_earned"] * (1 - safe_divide(abs(profile_money_earned - target_money_earned), max(profile_money_earned, target_money_earned)))
     
     # Handle distance
-    profile_distance = profile.get("distance", 0)
-    target_distance = target_profile.get("distance", 0)
+    profile_distance = profile.get("distance", 0) or 0
+    target_distance = target_profile.get("distance", 0) or 0
     score += WEIGHTS["distance"] * (1 - safe_divide(abs(profile_distance - target_distance), max(profile_distance, target_distance)))
     
     return score
